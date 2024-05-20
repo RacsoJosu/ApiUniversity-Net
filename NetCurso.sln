@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiRestfull", "ApiRestfull\ApiRestfull.csproj", "{FD6B31F8-E5D6-4217-95CE-0A33E3B2734D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinQSnipets", "LinQSnipets\LinQSnipets.csproj", "{0B445EF2-7FA4-4856-95EA-1336062FAD20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD6B31F8-E5D6-4217-95CE-0A33E3B2734D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD6B31F8-E5D6-4217-95CE-0A33E3B2734D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD6B31F8-E5D6-4217-95CE-0A33E3B2734D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD6B31F8-E5D6-4217-95CE-0A33E3B2734D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B445EF2-7FA4-4856-95EA-1336062FAD20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B445EF2-7FA4-4856-95EA-1336062FAD20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B445EF2-7FA4-4856-95EA-1336062FAD20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B445EF2-7FA4-4856-95EA-1336062FAD20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8EAF6308-290D-4192-8982-69716A1474F1}
+	EndGlobalSection
+EndGlobal
