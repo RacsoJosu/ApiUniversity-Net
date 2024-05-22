@@ -1,6 +1,7 @@
 // 1 .using para usar entity framework 
 using Microsoft.EntityFrameworkCore;
 using ApiRestfull.DataAcces;
+using ApiRestfull.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 // 2. conexion con la base de datos
@@ -10,9 +11,28 @@ var connectionString = builder.Configuration.GetConnectionString(CONNECTIONAME);
 
 // 3. contexto de la app
 builder.Services.AddDbContext<UniversityContext>(context => context.UseSqlServer(connectionString));
-// Add services to the container.
+
+
+
+// 4. Add services to the container.
+
 
 builder.Services.AddControllers();
+// para poder inyectar los servicios en nuestros controller 
+builder.Services.AddScoped<IStudentService, StudentService>();
+
+// 5. Habilitar el CORS 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+    });
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,5 +51,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+// que la api haga uso de cors
+app.UseCors("CorsPolicy");
+
 
 app.Run();

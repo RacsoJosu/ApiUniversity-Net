@@ -262,6 +262,53 @@ namespace LinQSnipets
 
         }
 
+        //ZIP
+        static public void ZipLinq()
+        {
+            int[] numbers = { 1, 2, 3, 4, 5 };
+            string[] strNumbers = { "one", "two", "three", "four", "five" };
+
+            IEnumerable<string> collectionZip = numbers.Zip(strNumbers, (number, word) => number + " = " + word);
+
+
+        }
+        // range y repeat
+        static public void repeatRangeLinq()
+        {
+            IEnumerable<int> numbers = Enumerable.Range(1, 1000);
+
+            IEnumerable<string> letters = Enumerable.Repeat("X", 5);
+
+        } 
+
+        //ALL
+
+        static public void LinqAll()
+        {
+
+            var numbers = new List<int>()
+            {
+                1,2,3,4,5
+            };
+
+            bool allAreSmallerThanTen = numbers.All(x => x < 10);
+            bool allAreSmallerThanTwo = numbers.All(x => x < 2);
+
+        }
+
+        // aggregate 
+        static public void aggregateQueries()
+        {
+            var numbers = new List<int>()
+            {
+                1,2,3,4,5,6,7,8,9,10
+            };
+
+            int sum = numbers.Aggregate((prevSum,current)=> prevSum + current);
+
+        }
+
+
 
 
 
