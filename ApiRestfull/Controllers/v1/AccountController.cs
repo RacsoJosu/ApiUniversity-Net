@@ -1,15 +1,17 @@
 ﻿using ApiRestfull.DataAcces;
 using ApiRestfull.Helpers;
 using ApiRestfull.Models;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
 
-namespace ApiRestfull.Controllers
+namespace ApiRestfull.Controllers.v1
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -44,36 +46,41 @@ namespace ApiRestfull.Controllers
 
         };
 
-
+        [MapToApiVersion("1.0")]
         [HttpPost]
-        public async Task<IActionResult> GetToken(UserLogin userLogin) 
+        public IActionResult GetToken(UserLogin userLogin)
         {
-            try 
+            try
             {
                 var token = new UserToken();
-                var searchUser = await _context.Users.FindAsync(userLogin.UserName);
-                var valid = Logins.Any( user => user.Name.Equals(userLogin.UserName, StringComparison.OrdinalIgnoreCase));
-                if (valid)
+                var searchUser = (from user in _context.Users
+                                  where user.Name == userLogin.UserName && user.Password == userLogin.Password
+                                  select user).FirstOrDefault();
+
+
+
+                if (searchUser != null)
                 {
-                    var user = Logins.FirstOrDefault(user => user.Name.Equals(userLogin.UserName, StringComparison.OrdinalIgnoreCase));
+
                     token = JwtHelper.GenerateToken(new UserToken()
                     {
-                        UserName= user.Name,
-                        EmailId= user.Email,
-                        Id= user.Id,
-                        GuidId= Guid.NewGuid(),
+                        UserName = searchUser.Name,
+                        EmailId = searchUser.Email,
+                        Id = searchUser.Id,
+                        GuidId = Guid.NewGuid(),
 
 
-                        
 
-                    }, __jwtSettings );
-                }else
+
+                    }, __jwtSettings);
+                }
+                else
                 {
                     return BadRequest("Wrong Passwrod");
                 }
 
                 return Ok(token);
-                    
+
             }
             catch (Exception ex)
             {
@@ -81,15 +88,15 @@ namespace ApiRestfull.Controllers
             }
 
         }
-
+        [MapToApiVersion("1.0")]
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles ="Administrator")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         public IActionResult GetUserList()
         {
             return Ok(Logins);
         }
-        
 
-        
+
+
     }
 }

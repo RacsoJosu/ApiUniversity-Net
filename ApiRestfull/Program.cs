@@ -4,6 +4,10 @@ using ApiRestfull.DataAcces;
 using ApiRestfull.Services;
 using ApiRestfull;
 using Microsoft.OpenApi.Models;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 // 2. conexion con la base de datos
@@ -19,6 +23,35 @@ builder.Services.AddDbContext<UniversityContext>(context => context.UseSqlServer
 builder.Services.AddJwtTokenServices(builder.Configuration);
 
 // 4. Add services to the container.
+
+// 10 localizacion 
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+// 10.1 añadirle los idiomas para la apicación
+
+
+// 11 versiones
+builder.Services.AddApiVersioning(
+ setup => {
+     setup.DefaultApiVersion = new ApiVersion(1,0);
+     setup.AssumeDefaultVersionWhenUnspecified = true;
+     setup.ReportApiVersions = true;
+
+ }   
+ ).AddApiExplorer(options =>
+ {
+     options.GroupNameFormat = "'v'VVV";
+     options.SubstituteApiVersionInUrl = true;
+ });
+// 12 como queremos documentar las versiones
+
+
+
+var suportedCultures = new[] { "en-US","es-ES" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(suportedCultures[1])
+    .AddSupportedCultures(suportedCultures)
+    .AddSupportedUICultures(suportedCultures);
 
 
 builder.Services.AddControllers();
@@ -78,14 +111,39 @@ builder.Services.AddSwaggerGen(options =>
         
     });
 });
+builder.Services.ConfigureOptions<ConfigSwaggerOptions>();
+
 
 var app = builder.Build();
+
+
+// 13 
+var apiDescriptionProvder = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+// 9.2 add localizacion 
+
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
     app.UseSwagger();
-    app.UseSwaggerUI();
+    //Personalizar el swagger UI
+    app.UseSwaggerUI(
+        options =>
+        {
+            foreach (var description in apiDescriptionProvder.ApiVersionDescriptions)
+            {
+                options.SwaggerEndpoint(
+                    $"/swagger/{description.GroupName}/swagger.json",
+                    description.GroupName.ToUpperInvariant()
+
+                    );
+
+            }
+        }
+        );
 }
 
 app.UseHttpsRedirection();

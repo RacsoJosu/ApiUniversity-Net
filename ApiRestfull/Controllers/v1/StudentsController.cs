@@ -7,52 +7,57 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApiRestfull.DataAcces;
 using ApiRestfull.Models;
+using ApiRestfull.Services;
 
-namespace ApiRestfull.Controllers
+namespace ApiRestfull.Controllers.v1
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class StudentsController : ControllerBase
     {
         private readonly UniversityContext _context;
+        // service
+        private readonly IStudentService _studentService;
 
-        public UsersController(UniversityContext context)
+        public StudentsController(UniversityContext context, IStudentService studentService)
         {
             _context = context;
+            _studentService = studentService;
+
         }
 
-        // GET: api/Users
+        // GET: api/Students
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Students.ToListAsync();
         }
 
-        // GET: api/Users/5
+        // GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
 
-            if (user == null)
+            if (student == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return student;
         }
 
-        // PUT: api/Users/5
+        // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutStudent(int id, Student student)
         {
-            if (id != user.Id)
+            if (id != student.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(student).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +65,7 @@ namespace ApiRestfull.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!StudentExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +78,36 @@ namespace ApiRestfull.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
+        // POST: api/Students
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<Student>> PostStudent(Student student)
         {
-            _context.Users.Add(user);
+            _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/Students/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteStudent(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
+            _context.Students.Remove(student);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UserExists(int id)
+        private bool StudentExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _context.Students.Any(e => e.Id == id);
         }
     }
 }
