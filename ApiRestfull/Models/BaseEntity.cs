@@ -6,6 +6,7 @@ namespace ApiRestfull.Models
     {
         [Required]
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string CreatedBy { get; set; } = string.Empty;

@@ -1,13 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ApiRestfull.Models
+
+namespace ApiRestfull.DTO
 {
-    public enum Roles
-    {
-        Administrator,
-        Student
-    }
-    public class User : BaseEntity
+    public class SignupDTO
     {
         [Required, StringLength(70)]
         public string FirstName { get; set; } = string.Empty;
@@ -19,9 +15,9 @@ namespace ApiRestfull.Models
 
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
-        public Student student { get; set; }
-        public Roles Role { get; set; } = Roles.Administrator;
+        
     
-    }
 
+
+    }
 }

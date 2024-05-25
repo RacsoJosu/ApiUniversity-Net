@@ -12,6 +12,6 @@ namespace LinQSnipets
 
         public string Name { get; set; }
 
-        public Employee[]? employees { get; set; };
+        public Employee[]? employees { get; set; }
     }
 }

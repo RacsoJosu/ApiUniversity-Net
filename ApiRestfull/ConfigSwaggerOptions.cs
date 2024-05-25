@@ -24,9 +24,9 @@ namespace ApiRestfull
                     var info = new OpenApiInfo
                     {
 
-                        Title = " My .NET ApiRestFull",
+                        Title = "Api de una Universidad",
                         Version = description.ApiVersion.ToString(),
-                        Description = "Esta es la primera version de la API",
+                        Description = "Esta es la primera version de la API, que maneja, los estduiantes, usuarios administradores y cursos ",
                         Contact = new OpenApiContact()
                         {
                             Email = "oscarvallecillo95@gmail.com",

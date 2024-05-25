@@ -1,4 +1,5 @@
 ﻿using ApiRestfull.DataAcces;
+using ApiRestfull.DTO;
 using ApiRestfull.Helpers;
 using ApiRestfull.Models;
 using Asp.Versioning;
@@ -17,6 +18,7 @@ namespace ApiRestfull.Controllers.v1
     {
         private readonly JwtSetting __jwtSettings;
         private readonly UniversityContext _context;
+       
 
         public AccountController(JwtSetting jwtSetting, UniversityContext context)
         {
@@ -25,27 +27,7 @@ namespace ApiRestfull.Controllers.v1
 
         }
 
-        private IEnumerable<User> Logins = new List<User>()
-        {
-            new User()
-            {
-                Id = 1,
-                Email = "correo@correo.com",
-                Name = "Admin",
-                Password= "Admin",
-
-            },
-            new User()
-            {
-                Id = 2,
-                Email= "correo2@correo.com",
-                Name="User",
-                Password="pepe"
-
-            }
-
-        };
-
+      
         [MapToApiVersion("1.0")]
         [HttpPost]
         public IActionResult GetToken(UserLogin userLogin)
@@ -54,23 +36,25 @@ namespace ApiRestfull.Controllers.v1
             {
                 var token = new UserToken();
                 var searchUser = (from user in _context.Users
-                                  where user.Name == userLogin.UserName && user.Password == userLogin.Password
+                                  where user.Email == userLogin.Email
                                   select user).FirstOrDefault();
 
 
 
-                if (searchUser != null)
+
+                if (searchUser != null && HandlerPassword.verifyPassword(userLogin.Password,searchUser.Password))
                 {
 
                     token = JwtHelper.GenerateToken(new UserToken()
                     {
-                        UserName = searchUser.Name,
+                        Role = searchUser.Role,
+                        UserName = searchUser.FirstName + " " + searchUser.LastName,
                         EmailId = searchUser.Email,
                         Id = searchUser.Id,
                         GuidId = Guid.NewGuid(),
 
 
-
+                        s
 
                     }, __jwtSettings);
                 }
@@ -93,8 +77,40 @@ namespace ApiRestfull.Controllers.v1
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         public IActionResult GetUserList()
         {
-            return Ok(Logins);
+            var usersList = from user in _context.Users select user;
+            return Ok(usersList);
         }
+
+        [MapToApiVersion("1.0")]
+        [HttpPost]
+
+        public async Task<ActionResult<User>> Signup(SignupDTO data)
+        {
+
+            if (_context.Users.Any(user => user.Email == data.Email))
+            {
+                return BadRequest("El email ya existe");
+                
+            }
+
+            var user = new User
+            {
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                Password = HandlerPassword.HashPassword(data.Password),
+                Email = data.Email
+
+            };
+
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
+
+
 
 
 

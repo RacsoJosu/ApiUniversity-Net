@@ -17,14 +17,14 @@ namespace ApiRestfull.Helpers
 
             };
 
-            if (userAccount.UserName == "Admin")
+            if (userAccount.Role == Roles.Administrator)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
 
-            } else if (userAccount.UserName == "User") {
+            } else if (userAccount.Role == Roles.Student) {
 
-                claims.Add(new Claim(ClaimTypes.Role, "User"));
-                claims.Add(new Claim("User Only", "User 1"));
+                claims.Add(new Claim(ClaimTypes.Role, "Student"));
+               // claims.Add(new Claim("User Only", "User 1"));
 
             }
 
